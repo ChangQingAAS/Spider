@@ -3,7 +3,8 @@ import requests
 from selenium import webdriver
 import csv
 import time
-
+import pymysql
+ 
 
 def get_product(keyboard):
     """搜索商品"""
@@ -32,20 +33,46 @@ def parse_data():
     lis = driver.find_elements_by_css_selector('.gl-item')
     for li in lis:
         try:
-            name = li.find_element_by_css_selector('div .p-name a em').text
-            price = li.find_element_by_css_selector(
+            type_id = ' '
+            sales = ' '
+            launch_time = ' '
+            out_time = ' '
+            # 获取商品描述
+            details = li.find_element_by_css_selector(
+                'div .p-img a').get_attribute('title')
+            # 获取产品id
+            href = li.find_element_by_css_selector(
+                'div .p-img a').get_attribute('href')
+            temp = href.split('/')
+            # print(temp)
+            product_id = temp[3].split('.html')[0]
+            # print(product_id)
+            # 商品名
+            product_name = li.find_element_by_css_selector(
+                'div .p-name a em').text
+            # 价格
+            price_1 = li.find_element_by_css_selector(
+                'div .p-price strong em').text
+            price_2 = li.find_element_by_css_selector(
                 'div .p-price strong i').text
+            price = price_1 + price_2
+            # 评论数
             deal = li.find_element_by_css_selector(
-                'div .p-commit strong a').text  # 评论
-            shop = li.find_element_by_css_selector(
-                'span.J_im_icon a').text  # 店铺名
-            # print(name, price, deal, shop)
-            with open('spider/京东商品' + word + '数据.csv',
+                'div .p-commit strong a').text
+            sales = deal
+            # 店铺名
+            shop_name = li.find_element_by_css_selector(
+                'span.J_im_icon a').text
+            # print(product_id, product_name, type_id, price, sales, launch_time,out_time, details, shop_name)
+            with open('京东商品-' + word + '-数据.csv',
                       mode='a+',
                       encoding='utf-8',
                       newline='\n') as f:
                 csv_write = csv.writer(f)  # 一个写入csv文件类型的对象
-                csv_write.writerow([name, shop, deal, price])
+                csv_write.writerow([
+                    product_id, product_name, type_id, price, sales,
+                    launch_time, out_time, details, shop_name
+                ])
         except Exception as e:
             print(e)
 
@@ -56,27 +83,31 @@ def get_next():
         '#J_bottomPage > span.p-num > a.pn-next > em').click()
 
 
-word = input('请输入你想搜索的商品：')
-# 实例化浏览器驱动
-driver = webdriver.Edge(
-    "C:\Program Files (x86)\Microsoft\Edge\Application\msedgedriver.exe")
-driver.get('https://www.jd.com/')
+if __name__ == '__main__':
+    word = input('请输入你想搜索的商品：')
+    # 实例化浏览器驱动
+    driver = webdriver.Edge(
+        "C:\Program Files (x86)\Microsoft\Edge\Application\msedgedriver.exe")
+    driver.get('https://www.jd.com/')
 
-# 调用搜索商品的函数
-get_product(word)
-with open('spider/京东商品' + word + '数据.csv',
-          mode='a+',
-          encoding='utf-8',
-          newline='\n') as f:
-    csv_write = csv.writer(f)  # 一个写入csv文件类型的对象
-    csv_write.writerow(['商品名称', '店铺', '评论数', '价格'])
-for page in range(1, 10):
-    # 下拉页面的函数
-    drop_down()
-    # 解析数据的函数
-    parse_data()
-    # 进入下一页
-    get_next()
+    # 调用搜索商品的函数
+    get_product(word)
+    with open('京东商品-' + word + '-数据.csv',
+              mode='a+',
+              encoding='utf-8',
+              newline='\n') as f:
+        csv_write = csv.writer(f)  # 一个写入csv文件类型的对象
+        csv_write.writerow([
+            'product_id', 'product_name', 'type_id', 'price', 'sales',
+            'launch_time', 'out_time', 'details', 'shop_name'
+        ])
+    for page in range(1, 20):
+        # 下拉页面的函数
+        drop_down()
+        # 解析数据的函数
+        parse_data()
+        # 进入下一页
+        get_next()
 
-# 退出浏览器
-driver.quit()
+    # 退出浏览器
+    driver.quit()
