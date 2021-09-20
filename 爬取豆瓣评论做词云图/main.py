@@ -94,7 +94,7 @@ class App(tk.Tk):
         ############## frame 4 ###############
         self.for_make.grid(row=0, column=2, ipadx=20, ipady=10)
 
-    # 定义播放按钮的事件函数
+
     '''
     解析电影
     '''

@@ -1,14 +1,7 @@
-# -*- Coding: UTF-8 -*-
-# pa_豆瓣影评.py
-# @作者 giao者
-# @创建日期 2021-03-03T18:48:20.269Z+08:00
-# @最后修改日期 2021-03-05T11:16:37.468Z+08:00
-# @代码说明
+# spider_douban_comments.py
+# @created 2021-03-07T15:23:32.377Z+08:00
+# @last-modified 2021-09-20T11:19:07.626Z+08:00
 #
-
-# 取多页数据：
-#  1.打开多个页面，根据他们https网站找规律
-#  2.分析’后页‘按钮的网站类型，找规律
 
 import requests
 import parsel
@@ -71,7 +64,7 @@ def get_work_href_included_id(work_name):
 def get_comments_list(work_href):
     if work_href != 'not found':
         page_count = 0
-        for page in range(0, 481, 20):
+        for page in range(0, 21, 20):
             page_count += 1
             print(
                 f'-------------------正在爬取第{page_count}页的数据--------------------'
