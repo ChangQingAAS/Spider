@@ -1,7 +1,7 @@
 import requests
 from selenium import webdriver
 
-not_test_ID_list = []
+not_test_ID_list = [3019225055]
 
 # 清空文件
 with open("./physical_test/data.txt", mode="w") as f:
@@ -15,7 +15,7 @@ driver = webdriver.Edge(
 
 # 本专业的边界我知道，但是我该怎么知道其他专业的边界值呢，怎么进行exception处理呢？
 # TODO
-for user_id in range(学号_start,学号_end):
+for user_id in range(3019225139, 3019225200):
 
     # 如果每次就退出
     if user_id in not_test_ID_list:
@@ -60,7 +60,7 @@ for user_id in range(学号_start,学号_end):
         scores = driver.find_element_by_css_selector(
             '#mycenter >  li:nth-child(8) > div.u_nav_name').text
 
-        with open("./physical_test/data.json", mode="a+") as f:
+        with open("./physical_test/data.txt", mode="a+") as f:
             f.write(name + "\n")
             f.write(student_id + "\n")
             f.write(year + "\n")
@@ -72,7 +72,7 @@ for user_id in range(学号_start,学号_end):
             f.write("\n")
             f.write("\n")
     except:
-        with open("./physical_test/data.json", mode="a+") as f:
+        with open("./physical_test/data.txt", mode="a+") as f:
             f.write(str(user_id) + " don't test! \n")
             f.write("\n")
             f.write("\n")
