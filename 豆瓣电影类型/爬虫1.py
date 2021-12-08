@@ -90,5 +90,5 @@ for i in range(0, 10):
         except:
             pass
 
-    pd.DataFrame(all_movie_data).to_excel('./data/第' + str(i) + '页.xlsx',
+    pd.DataFrame(all_movie_data).to_excel('./data/' + str(i) + '.xlsx',
                                           encoding='utf-8')
