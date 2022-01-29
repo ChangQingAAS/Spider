@@ -1,0 +1,4 @@
+yesterday is Monday
+today is Tuesday
+tomorrow is Wednesday
+the day after tomorrow is Thursday
